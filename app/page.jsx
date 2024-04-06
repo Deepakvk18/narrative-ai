@@ -1,25 +1,28 @@
 "use client"
 
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import Head from 'next/head';
-import Header from '../components/Header';
 import Form from '../components/Form';
 import Story from '../components/Story';
-import Pages from '@/components/Card';
 import { motion } from 'framer-motion';
 import axios from 'axios';
 import { Bounce, ToastContainer, toast } from 'react-toastify';
+import { MyContext } from '@/components/FormContext';
 
 const Page = () => {
-  const [story, setStory] = useState<String []>([]);
-  const [currentPage, setCurrentPage] = useState<Number>(1);
+
+  const [story, setStory] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const { setFormState } = useContext(MyContext)
 
   const generateStory = async ( data ) => {
-    if (story.length === data.pages - 1) data.last = true
+
     data.history = story.join(".\n")
     try {
       const response = await axios.post("/generate-story", data)
       setStory((prev)=>[...prev, response.data]);
+      setFormState(data)
     } catch (error) {
       console.error(error);
       toast(`⚠️ ${error?.message}`, {
@@ -40,8 +43,7 @@ const Page = () => {
     <div className="fixed flex min-h-screen w-screen pb-10">
       <ToastContainer />
       <Head>
-        <title>The Enchanted Storyteller</title>
-        <meta name="description" content="Generate personalized fantasy stories" />
+        <meta name="description" content="Generate personalized stories" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
@@ -54,8 +56,8 @@ const Page = () => {
         <Form onSubmit={generateStory} />
       </motion.div>
 
-      <div className="flex-grow relative flex m-10 mb-80 w-4/5">
-        {story.length && <Story story={story} />}
+      <div className="flex-grow relative flex m-10 w-4/5">
+        {story.length && <Story story={story} onSubmit={generateStory} />}
       </div>
       
     </div>

@@ -15,7 +15,8 @@ function getPrompt(name: String,
     A person named ${name} has asked you to write a story about ${creature} and in a ${setting} setting. You have to create an amazing continuation of the story. If the total pages and pageNo is equal, story should complete ther. Plan accordingly. you have to complete the story at any cost. The climax should happen then and there. Otherwise, leave the ending of the particular chapter in suspense. The user has also provided some custom instructions: ${prompt}. 
     Total No of Pages: ${pages}
     This Page No: ${pageNo}
-    The story so far goes like this: ${history}`
+    The story so far goes like this: ${history}
+    Also, there should be a title for that particular chapter`
     }
 
 export async function generateResponse(name: String, 

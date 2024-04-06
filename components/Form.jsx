@@ -9,6 +9,10 @@ const schema = z.object({
   element: z.string(),
   creature: z.string(),
   pages: z.coerce.number().int().positive().min(1),
+}).required({
+  name: true,
+  setting: true,
+  pages: true
 });
 
 const setting = [
@@ -68,7 +72,6 @@ const creatures = [
   'Giant',
   'Hydra',
 ];
-
 
 const MyForm = ({ onSubmit }) => {
   const {

@@ -3,17 +3,19 @@ import React, { useState } from 'react';
 import { motion, useScroll } from 'framer-motion';
 import Pages from './Card';
 import Card from './Card';
+import StoryCard from './StoryCard';
 
 
-const Story = ({ story }: { story: string[] }) => {
+const Story = ({ story, onSubmit }) => {
 
     const { scrollYProgress } = useScroll();
-    const [hueA, setHueA] = useState(340)
-    const [hueB, setHueB] = useState(200)
+
+    console.log(onSubmit);
+    
 
   return (
     <motion.div
-      className="flex-grow p-6 bg-white shadow-lg rounded-lg relative overflow-y-auto no-scrollbar"
+      className="flex-grow p-6 bg-white shadow-lg rounded-lg relative overflow-y-auto"
       initial={{ x: '100%' }}
       animate={{ x: 0 }}
       transition={{ type: 'spring', stiffness: 120, duration: 1, delay: 0.5 }}
@@ -28,15 +30,8 @@ const Story = ({ story }: { story: string[] }) => {
         Story Generated!
       </motion.div>
       <div className='flex flex-col'>
-        { story?.map((s: String, index)=>
-            <div className='flex w-full gap-5'>
-                <div className='flex w-3/4'>
-                    {story}
-                </div>
-                <div className='flex w-1/4'>
-                    <Card emoji={"🍅"} hueA={hueA} hueB={hueB} key={index} />
-                </div>
-            </div>
+        { story?.map((s, index)=>
+            <StoryCard story={s} index={index} onSubmit={onSubmit} />
         ) }
       </div>
     </motion.div>
