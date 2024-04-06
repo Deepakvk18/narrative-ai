@@ -9,6 +9,7 @@ const schema = z.object({
   element: z.string(),
   creature: z.string(),
   pages: z.coerce.number().int().positive().min(1),
+  prompt: z.string()
 }).required({
   name: true,
   setting: true,
@@ -73,7 +74,7 @@ const creatures = [
   'Hydra',
 ];
 
-const MyForm = ({ onSubmit }) => {
+const MyForm = ({ onSubmit, disabled }) => {
   const {
     register,
     handleSubmit,
@@ -83,15 +84,15 @@ const MyForm = ({ onSubmit }) => {
   });
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="max-w-lg mx-auto mt-8">
+    <form onSubmit={handleSubmit(onSubmit)} className="w-full p-8 mx-auto mt-8">
       <label className="block mb-4">
         Your Name:
-        <input type="text" {...register('name')} className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 caret-fuchsia-600 " />
+        <input type="text" {...register('name')} className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 caret-fuchsia-600 disabled:opacity-30" disabled={disabled}/>
         {errors.name && <span className="text-red-500">{errors.name.message}</span>}
       </label>
       <label className="block mb-4">
         Preferred Setting:
-        <select {...register('setting')} className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+        <select {...register('setting')} disabled={disabled} className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 disabled:opacity-30">
           {setting.map((option) => (
             <option key={option} value={option}>{option}</option>
           ))}
@@ -100,7 +101,7 @@ const MyForm = ({ onSubmit }) => {
       </label>
       <label className="block mb-4">
         Favorite Creature:
-        <select {...register('creature')} className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+        <select {...register('creature')} disabled={disabled} className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 disabled:opacity-30">
           {creatures.map((option) => (
             <option key={option} value={option}>{option}</option>
           ))}
@@ -110,7 +111,7 @@ const MyForm = ({ onSubmit }) => {
       </label>
       <label className="block mb-4">
         Favorite Element:
-        <select {...register('element')} className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+        <select {...register('element')} disabled={disabled} className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 disabled:opacity-30">
           {elements.map((option) => (
             <option key={option} value={option}>{option}</option>
           ))}
@@ -119,11 +120,16 @@ const MyForm = ({ onSubmit }) => {
         {errors.element && <span className="text-red-500">{errors.element.message}</span>}
       </label>
       <label className="block mb-4">
+        Custom Prompt
+        <textarea disabled={disabled} {...register('prompt')} className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 disabled:opacity-30" />
+        {errors.pages && <span className="text-red-500">{errors.pages.prompt}</span>}
+      </label>
+      <label className="block mb-4">
         Number of Pages:
-        <input type="number" {...register('pages')} className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50" />
+        <input type="number" disabled={disabled} {...register('pages')} className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 disabled:opacity-30" />
         {errors.pages && <span className="text-red-500">{errors.pages.message}</span>}
       </label>
-      <button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition-colors duration-300">Generate Story</button>
+      <button type="submit" disabled={disabled} className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition-colors duration-300 disabled:opacity-30">Generate Story</button>
     </form>
   );
 };

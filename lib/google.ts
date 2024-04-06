@@ -16,7 +16,7 @@ function getPrompt(name: String,
     Total No of Pages: ${pages}
     This Page No: ${pageNo}
     The story so far goes like this: ${history}
-    Also, there should be a title for that particular chapter`
+    Also, there should be a title for that particular chapter. Generate only one chapter at a time.`
     }
 
 export async function generateResponse(name: String, 
