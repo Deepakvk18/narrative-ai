@@ -1,0 +1,1 @@
+echo "yarn run format" > .husky/pre-commit

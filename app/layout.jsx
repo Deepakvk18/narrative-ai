@@ -2,7 +2,6 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import Providers from "@/components/Providers";
 
-
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
@@ -10,15 +9,11 @@ export const metadata = {
   description: "AI Story Teller",
 };
 
-export default function RootLayout({
-  children,
-}) {
+export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={inter.className + " text-black no-scrollbar"}>
-        <Providers>
-          {children}
-        </Providers>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

@@ -1,5 +1,4 @@
-import React from 'react';
-
+import React from "react";
 
 const DialogueBox = ({ title, value, onChange, onCancel, onConfirm }) => {
   return (
@@ -12,7 +11,7 @@ const DialogueBox = ({ title, value, onChange, onCancel, onConfirm }) => {
             type="text"
             className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
             value={value}
-            onChange={e=>onChange(e.target.value)}
+            onChange={(e) => onChange(e.target.value)}
           />
         </label>
         <div className="flex justify-end">

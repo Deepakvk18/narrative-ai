@@ -2,7 +2,7 @@ import { motion, Variants } from "framer-motion";
 
 const cardVariants = {
   offscreen: {
-    y: 300
+    y: 300,
   },
   onscreen: {
     y: 50,
@@ -10,9 +10,9 @@ const cardVariants = {
     transition: {
       type: "spring",
       bounce: 0.4,
-      duration: 0.8
-    }
-  }
+      duration: 0.8,
+    },
+  },
 };
 
 const hue = (h) => `hsl(${h}, 100%, 50%)`;
@@ -45,4 +45,3 @@ export default function Card({ emoji, hueA, hueB }) {
 //   ["🍆", 260, 290],
 //   ["🍇", 290, 320]
 // ];
-
