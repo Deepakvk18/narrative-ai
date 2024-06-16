@@ -1,4 +1,4 @@
-import { motion, Variants } from "framer-motion";
+import { motion } from 'framer-motion';
 
 const cardVariants = {
   offscreen: {
@@ -8,7 +8,7 @@ const cardVariants = {
     y: 50,
     rotate: -10,
     transition: {
-      type: "spring",
+      type: 'spring',
       bounce: 0.4,
       duration: 0.8,
     },

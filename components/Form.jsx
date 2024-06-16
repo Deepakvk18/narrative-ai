@@ -1,7 +1,7 @@
-import React from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
+import React from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
 
 const schema = z
   .object({
@@ -19,61 +19,61 @@ const schema = z
   });
 
 const setting = [
-  "Medieval",
-  "Mythological",
-  "Futuristic",
-  "Fantasy",
-  "Sci-Fi",
-  "Horror",
-  "Adventure",
-  "Steampunk",
-  "Post-Apocalyptic",
-  "Superhero",
-  "Magic Realism",
-  "Cyberpunk",
-  "Historical Fiction",
-  "Dystopian",
-  "Space Opera",
-  "Urban Fantasy",
-  "Time Travel",
-  "Alternate History",
-  "Epic Fantasy",
-  "Gothic",
+  'Medieval',
+  'Mythological',
+  'Futuristic',
+  'Fantasy',
+  'Sci-Fi',
+  'Horror',
+  'Adventure',
+  'Steampunk',
+  'Post-Apocalyptic',
+  'Superhero',
+  'Magic Realism',
+  'Cyberpunk',
+  'Historical Fiction',
+  'Dystopian',
+  'Space Opera',
+  'Urban Fantasy',
+  'Time Travel',
+  'Alternate History',
+  'Epic Fantasy',
+  'Gothic',
 ];
 
 const elements = [
-  "NA",
-  "Air",
-  "Water",
-  "Fire",
-  "Earth",
-  "Lightning",
-  "Lava",
-  "Metal",
+  'NA',
+  'Air',
+  'Water',
+  'Fire',
+  'Earth',
+  'Lightning',
+  'Lava',
+  'Metal',
 ];
 
 const creatures = [
-  "NA",
-  "Dragon",
-  "Phoenix",
-  "Unicorn",
-  "Griffin",
-  "Fairy",
-  "Elf",
-  "Dwarf",
-  "Centaur",
-  "Mermaid",
-  "Werewolf",
-  "Vampire",
-  "Goblin",
-  "Orc",
-  "Troll",
-  "Witch",
-  "Wizard",
-  "Demon",
-  "Angel",
-  "Giant",
-  "Hydra",
+  'NA',
+  'Dragon',
+  'Phoenix',
+  'Unicorn',
+  'Griffin',
+  'Fairy',
+  'Elf',
+  'Dwarf',
+  'Centaur',
+  'Mermaid',
+  'Werewolf',
+  'Vampire',
+  'Goblin',
+  'Orc',
+  'Troll',
+  'Witch',
+  'Wizard',
+  'Demon',
+  'Angel',
+  'Giant',
+  'Hydra',
 ];
 
 const MyForm = ({ onSubmit, disabled }) => {
@@ -91,7 +91,7 @@ const MyForm = ({ onSubmit, disabled }) => {
         Your Name:
         <input
           type="text"
-          {...register("name")}
+          {...register('name')}
           className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 caret-fuchsia-600 disabled:opacity-30"
           disabled={disabled}
         />
@@ -102,7 +102,7 @@ const MyForm = ({ onSubmit, disabled }) => {
       <label className="block mb-4">
         Preferred Setting:
         <select
-          {...register("setting")}
+          {...register('setting')}
           disabled={disabled}
           className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 disabled:opacity-30"
         >
@@ -119,7 +119,7 @@ const MyForm = ({ onSubmit, disabled }) => {
       <label className="block mb-4">
         Favorite Creature:
         <select
-          {...register("creature")}
+          {...register('creature')}
           disabled={disabled}
           className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 disabled:opacity-30"
         >
@@ -136,7 +136,7 @@ const MyForm = ({ onSubmit, disabled }) => {
       <label className="block mb-4">
         Favorite Element:
         <select
-          {...register("element")}
+          {...register('element')}
           disabled={disabled}
           className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 disabled:opacity-30"
         >
@@ -154,7 +154,7 @@ const MyForm = ({ onSubmit, disabled }) => {
         Custom Prompt
         <textarea
           disabled={disabled}
-          {...register("prompt")}
+          {...register('prompt')}
           className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 disabled:opacity-30"
         />
         {errors.pages && (
@@ -166,7 +166,7 @@ const MyForm = ({ onSubmit, disabled }) => {
         <input
           type="number"
           disabled={disabled}
-          {...register("pages")}
+          {...register('pages')}
           className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 disabled:opacity-30"
         />
         {errors.pages && (

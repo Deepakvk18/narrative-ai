@@ -1,20 +1,17 @@
-import React, { useContext, useState } from "react";
-import Card from "./Card";
-import { MyContext } from "./FormContext";
-import DialogueBox from "./DialogPopUp";
+import React, { useContext, useState } from 'react';
+import { MyContext } from './FormContext';
+import DialogueBox from './DialogPopUp';
 
-const StoryCard = ({ s, index, onSubmit, story, setStory }) => {
-  const [hueA, setHueA] = useState(340);
-  const [hueB, setHueB] = useState(200);
+const StoryCard = ({ s, index, onSubmit, setStory }) => {
   const [nextChpt, setNextChpt] = useState(false);
   const [edit, setEdit] = useState(false);
-  const [customPrompt, setCustomPrompt] = useState("");
+  const [customPrompt, setCustomPrompt] = useState('');
 
   const { formState, setFormState } = useContext(MyContext);
 
   const onNextChapter = (e) => {
     e.preventDefault();
-    setFormState((prev) => ({ ...prev, customPrompt: customPrompt }));
+    setFormState((prev) => ({ ...prev, customPrompt }));
     onSubmit(formState);
   };
 
@@ -52,10 +49,10 @@ const StoryCard = ({ s, index, onSubmit, story, setStory }) => {
       )}
       {edit && (
         <DialogueBox
-          title={"Change prompt for this chapter"}
+          title={'Change prompt for this chapter'}
           onCancel={() => {
             setEdit(false);
-            setCustomPrompt("");
+            setCustomPrompt('');
           }}
           onConfirm={onEdit}
           value={customPrompt}
@@ -64,10 +61,10 @@ const StoryCard = ({ s, index, onSubmit, story, setStory }) => {
       )}
       {nextChpt && (
         <DialogueBox
-          title={"Create prompt for the next chapter"}
+          title={'Create prompt for the next chapter'}
           onCancel={() => {
             setNextChpt(false);
-            setCustomPrompt("");
+            setCustomPrompt('');
           }}
           onConfirm={onNextChapter}
           value={customPrompt}

@@ -1,5 +1,5 @@
-import { generateResponse } from "@/lib/google";
-import { NextRequest, NextResponse } from "next/server";
+import generateResponse from '@/lib/google';
+import { NextRequest, NextResponse } from 'next/server';
 
 interface IInput {
   name: String;
@@ -11,10 +11,10 @@ interface IInput {
   pageNo: Number;
 }
 
-export const POST = async (req: NextRequest, res: NextResponse) => {
+const POST = async (req: NextRequest) => {
   const { name, setting, creature, prompt, history, pages, pageNo }: IInput =
     await req.json();
-  var response = null;
+  let response = null;
   try {
     response = await generateResponse(
       name,
@@ -27,7 +27,8 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
     );
     return NextResponse.json(response);
   } catch (error) {
-    console.error(error);
-    return NextResponse.json({ message: "Some error Occures" });
+    return NextResponse.json({ message: 'Some error Occured' });
   }
 };
+
+export default POST;

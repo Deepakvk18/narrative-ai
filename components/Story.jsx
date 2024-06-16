@@ -1,9 +1,7 @@
 // components/Story.tsx
-import React, { useState } from "react";
-import { motion, useScroll } from "framer-motion";
-import Pages from "./Card";
-import Card from "./Card";
-import StoryCard from "./StoryCard";
+import React from 'react';
+import { motion, useScroll } from 'framer-motion';
+import StoryCard from './StoryCard';
 
 const Story = ({ story, onSubmit, setStory }) => {
   const { scrollYProgress } = useScroll();
@@ -11,9 +9,9 @@ const Story = ({ story, onSubmit, setStory }) => {
   return (
     <motion.div
       className="flex-grow p-6 bg-white shadow-lg rounded-lg relative overflow-y-auto h-full no-scrollbar"
-      initial={{ x: "100%" }}
+      initial={{ x: '100%' }}
       animate={{ x: 0 }}
-      transition={{ type: "spring", stiffness: 120, duration: 1, delay: 0.5 }}
+      transition={{ type: 'spring', stiffness: 120, duration: 1, delay: 0.5 }}
     >
       <motion.div
         className="progress-bar bg-blue-400"

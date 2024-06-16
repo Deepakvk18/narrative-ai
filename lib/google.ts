@@ -1,8 +1,8 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import { GoogleGenerativeAI } from '@google/generative-ai';
 
-const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY || "");
+const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY || '');
 
-const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
 
 function getPrompt(
   name: String,
@@ -21,7 +21,7 @@ function getPrompt(
     Also, there should be a title for that particular chapter. Generate only one chapter at a time.`;
 }
 
-export async function generateResponse(
+export default async function generateResponse(
   name: String,
   setting: String,
   creature: String,
