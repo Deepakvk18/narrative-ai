@@ -11,7 +11,7 @@ interface IInput {
   pageNo: Number;
 }
 
-const POST = async (req: NextRequest) => {
+export const POST = async (req: NextRequest) => {
   const { name, setting, creature, prompt, history, pages, pageNo }: IInput =
     await req.json();
   let response = null;
@@ -30,5 +30,3 @@ const POST = async (req: NextRequest) => {
     return NextResponse.json({ message: 'Some error Occured' });
   }
 };
-
-export default POST;

@@ -172,7 +172,9 @@ const MyForm = ({
           className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 disabled:opacity-30"
         />
         {errors.pages && (
-          <span className="text-red-500">{errors.root?.message}</span>
+          <span className="text-red-500">
+            {errors.pages?.message?.toString()}
+          </span>
         )}
       </label>
       <label className="block mb-4">

@@ -1,0 +1,530 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum GENDER {
+  MALE
+  FEMALE
+  NONBINARY
+  UNKNOWN
+}
+
+enum RELATIONSHIPS {
+  // Family
+  FATHER
+  MOTHER
+  SON
+  DAUGHTER
+  BROTHER
+  SISTER
+  GRANDFATHER
+  GRANDMOTHER
+  GRANDSON
+  GRANDDAUGHTER
+  UNCLE
+  AUNT
+  NEPHEW
+  NIECE
+  COUSIN
+  STEPFATHER
+  STEPMOTHER
+  STEPSON
+  STEPDAUGHTER
+  STEPBROTHER
+  STEPSISTER
+  HALF_BROTHER
+  HALF_SISTER
+  FATHER_IN_LAW
+  MOTHER_IN_LAW
+  SON_IN_LAW
+  DAUGHTER_IN_LAW
+  BROTHER_IN_LAW
+  SISTER_IN_LAW
+  GODFATHER
+  GODMOTHER
+  GODSON
+  GODDAUGHTER
+
+  // Romantic
+  SPOUSE
+  HUSBAND
+  WIFE
+  FIANCE
+  FIANCEE
+  LOVER
+  PARTNER
+  EX_SPOUSE
+  EX_HUSBAND
+  EX_WIFE
+  EX_FIANCE
+  EX_FIANCEE
+  EX_LOVER
+  EX_PARTNER
+  CRUSH
+  ADMIRER
+  SUITOR
+
+  // Professional
+  BOSS
+  EMPLOYEE
+  COWORKER
+  COLLEAGUE
+  MENTOR
+  MENTEE
+  TEACHER
+  STUDENT
+  MASTER
+  APPRENTICE
+  ADVISOR
+  ADVISEE
+  CLIENT
+  SERVICE_PROVIDER
+  BUSINESS_PARTNER
+
+  // Social
+  FRIEND
+  BEST_FRIEND
+  ACQUAINTANCE
+  NEIGHBOR
+  ROOMMATE
+  CLASSMATE
+  TEAMMATE
+
+  // Adversarial
+  ENEMY
+  RIVAL
+  NEMESIS
+  OPPONENT
+  COMPETITOR
+  BULLY
+  VICTIM
+
+  // Power Dynamics
+  RULER
+  SUBJECT
+  LEADER
+  FOLLOWER
+  SUPERIOR
+  SUBORDINATE
+  CAPTOR
+  CAPTIVE
+  SERVANT
+  GUARDIAN
+  WARD
+
+  // Story-specific
+  ALLY
+  SIDEKICK
+  HENCHMAN
+  MINION
+  INFORMANT
+  BETRAYER
+  SAVIOR
+  RESCUER
+  RESCUEE
+
+  // Abstract or Symbolic
+  IDOL
+  FAN
+  INSPIRATION
+  SUCCESSOR
+  PREDECESSOR
+  PROTEGE
+  PATRON
+
+  // Neutral or Undefined
+  STRANGER
+  UNKNOWN
+
+  // Fictional or Supernatural
+  CREATOR
+  CREATION
+  DEITY
+  WORSHIPPER
+  FAMILIAR
+  SHAPESHIFTER_ALTERNATE
+
+  // Time-based
+  CHILDHOOD_FRIEND
+  PAST_SELF
+  FUTURE_SELF
+  ANCESTOR
+  DESCENDANT
+
+  // Group-based
+  FELLOW_MEMBER
+  FELLOW_CITIZEN
+  COMPATRIOT
+  FELLOW_TRAVELER
+}
+
+model User {
+  id           Int            @id @default(autoincrement())
+  name         String
+  email        String         @unique
+  signupType   String
+  projects     Project[]
+  projectRights ProjectRight[]
+}
+
+model RolePermission {
+  id          Int    @id @default(autoincrement())
+  role        Role @relation(fields: [roleId], references: [id])
+  roleId      Int
+  permissions String
+}
+
+model Role {
+  id   Int    @id @default(autoincrement())
+  role String
+  permissionId Int
+  permissions RolePermission[]
+  projectRights ProjectRight[]
+}
+
+model ProjectRight {
+  id         Int     @id @default(autoincrement())
+  project    Project @relation(fields: [projectId], references: [id])
+  projectId  Int
+  user       User    @relation(fields: [userId], references: [id])
+  userId     Int
+  role       Role    @relation(fields: [roleId], references: [id])
+  roleId     Int
+
+  @@index([projectId])
+  @@index([userId])
+}
+
+model Project {
+  id           Int            @id @default(autoincrement())
+  name         String
+  description  String
+  summary      String
+  createdBy    User           @relation(fields: [createdById], references: [id])
+  createdById  Int
+  characters   Character[]
+  eras         Era[]
+  groups       Group[]
+  projectRights ProjectRight[]
+  places        Place[]
+  occupations   Occupation[]
+
+  @@index([createdById])
+}
+
+model Arc {
+  id                Int                     @id @default(autoincrement())
+  name              String
+  backstory         String
+  summary           String
+  places            Place[]
+  project           Era                     @relation(fields: [projectId], references: [id])
+  projectId         Int
+  timeline          String
+  chapters          Chapter[] 
+}
+
+model Character {
+  id                Int                     @id @default(autoincrement())
+  project           Project                 @relation(fields: [projectId], references: [id])
+  projectId         Int
+  name              String
+  backstory         String
+  gender            GENDER
+  isHuman           Boolean
+  characterTimeline CharacterProgression[]
+  owns              Place[]
+  family            Family[]
+  powerMoves        PowerMove[]
+  era               Era                     @relation(fields: [earId], references: [id])
+  earId             Int
+
+  @@index([projectId])
+}
+
+model Occupation {
+  id                Int                     @id @default(autoincrement())
+  project           Project                 @relation(fields: [projectId], references: [id])
+  projectId         Int
+  name              String
+  description       String
+  members           CharacterProgression[]
+}
+
+model CharacterProgression {
+  id                Int                     @id @default(autoincrement())
+  age               Int
+  occupation        Occupation              @relation(fields: [occupationId], references: [id])
+  occupationId      Int
+  character         Character               @relation(fields: [characterId], references: [id])
+  characterId       Int
+  characterType     CharacterType           @relation(fields: [characterTypeId], references: [id])
+  characterTypeId   Int
+  imageCharacters   ImageExcerpt[]
+  excerptCharacters ExcerptCharacter[]
+  clothes           Clothes[]
+  images            CharacterImage[]
+  relationships     CharacterRelationship[] @relation("CharacterRelationships")
+  relatedTo         CharacterRelationship[] @relation("RelatedCharacters")
+  ownsArtifacts     ArtifactsAndWeapons[] 
+  groups            Group[]
+  goals             String
+  fears             String
+  desires           String
+}
+
+model Family {
+  id         Int         @id @default(autoincrement())
+  name       String
+  history    String
+  ownsPlace  Place[]
+  members    Character[]
+  artifactsAndWeapons ArtifactsAndWeapons[]
+}
+
+model CharacterType {
+  id         Int         @id @default(autoincrement())
+  type       String
+  characters CharacterProgression[]
+}
+
+model CharacterRelationship {
+  id                 Int        @id @default(autoincrement())
+  character          CharacterProgression  @relation("CharacterRelationships", fields: [characterProgressionId], references: [id])
+  characterProgressionId        Int
+  relatedCharacter   CharacterProgression  @relation("RelatedCharacters", fields: [relatedCharacterProgressionId], references: [id])
+  relatedCharacterProgressionId Int
+  relationship       RELATIONSHIPS
+
+  @@index([characterProgressionId])
+  @@index([relatedCharacterProgressionId])
+}
+
+model Chapter {
+  id              Int              @id @default(autoincrement())
+  arc             Arc              @relation(fields: [arcId], references: [id])
+  arcId           Int
+  placeId         Int
+  name            String
+  number          Int
+  images          Panel[]
+  chapterExcerpts ChapterExcerpt[]
+
+  @@index([arcId])
+}
+
+model Group {
+  id        Int     @id @default(autoincrement())
+  name      String
+  captain   Int
+  motto     String
+  isVillain Boolean @default(false)
+  project   Project @relation(fields: [projectId], references: [id])
+  projectId Int
+  ownsPlace      Place[]
+  ownsArtifacts ArtifactsAndWeapons[]
+  members   CharacterProgression[]
+  aconflicts Conflict[]       @relation("AttackGroup")
+  dconflicts  Conflict[]      @relation("DefenseGroup")
+
+  @@index([projectId])
+}
+
+model Panel {
+  id               Int              @id @default(autoincrement())
+  chapter          Chapter          @relation(fields: [chapterId], references: [id])
+  chapterId        Int
+  imageIndex       Int
+  imageUrl         String
+  subPlace         SubPlace         @relation(fields: [placeId], references: [id])
+  placeId          Int
+  imageCharacters  ImageExcerpt[]
+
+  @@index([chapterId])
+}
+
+model ImageExcerpt {
+  id          Int       @id @default(autoincrement())
+  image       Panel     @relation(fields: [imageId], references: [id])
+  imageId     Int
+  character   CharacterProgression @relation(fields: [characterProgressionId], references: [id])
+  characterProgressionId Int
+  imageRole   String
+
+  @@index([imageId])
+  @@index([characterProgressionId])
+}
+
+model ChapterExcerpt {
+  id            Int                @id @default(autoincrement())
+  chapter       Chapter            @relation(fields: [chapterId], references: [id])
+  chapterId     Int
+  excerptIndex  Int
+  excerpt       String
+  excerptCharacters ExcerptCharacter[]
+
+  @@index([chapterId])
+}
+
+model ExcerptCharacter {
+  id          Int            @id @default(autoincrement())
+  excerpt     ChapterExcerpt @relation(fields: [excerptId], references: [id])
+  excerptId   Int
+  character   CharacterProgression      @relation(fields: [characterProgressionId], references: [id])
+  characterProgressionId Int
+  role        String
+
+  @@index([excerptId])
+  @@index([characterProgressionId])
+}
+
+model Place {
+  id                 Int           @id @default(autoincrement())
+  project            Project       @relation(fields: [projectId], references: [id])
+  projectId          Int
+  history            String
+  ownedByCharacter   Character     @relation(fields: [ownedByCharacterId], references: [id])
+  ownedByCharacterId Int
+  ownedByFamily      Family   @relation(fields: [ownedByFamilyId], references: [id])
+  ownedByFamilyId    Int
+  ownedByGroup       Group        @relation(fields: [ownedByGroupId], references: [id])
+  ownedByGroupId     Int
+  subPlaces          SubPlace[]
+  arcs               Arc[]
+}
+
+model SubPlace {
+  id          Int           @id @default(autoincrement())
+  place       Place         @relation(fields: [placeId], references: [id])
+  placeId     Int
+  name        String
+  history     String
+  panels      Panel[]
+  subPlaceProgression SubPlaceProgression[]
+}
+
+model Era {
+  id          Int           @id @default(autoincrement())
+  project     Project       @relation(fields: [projectId], references: [id])
+  projectId   Int
+  timeline    String
+  description String
+  significantEvents String
+  arc         Arc[]
+  characters  Character[]
+  conflicts   Conflict[]
+  events      Event[]
+}
+
+model SubPlaceProgression {
+  id          Int           @id @default(autoincrement())
+  place       SubPlace      @relation(fields: [subPlaceId], references: [id])
+  subPlaceId  Int
+  era         String
+  name        String
+  history     String
+  images      PlaceImage[]
+}
+
+model CharacterImage {
+  id          Int           @id @default(autoincrement())
+  character   CharacterProgression     @relation(fields: [characterProgressionId], references: [id])
+  characterProgressionId Int
+  imageUrl    String
+}
+
+model PlaceImage {
+  id          Int           @id @default(autoincrement())
+  subPlace    SubPlaceProgression         @relation(fields: [subPlaceId], references: [id])
+  subPlaceId     Int
+  imageUrl    String
+}
+
+model Clothes {
+  id          Int           @id @default(autoincrement())
+  name        String
+  characters  CharacterProgression[]
+  image       String
+}
+
+model PowerSystem {
+  id          Int           @id @default(autoincrement())
+  name        String
+  history     String
+  explanation String
+  types       PowerType[]
+}
+
+model PowerType {
+  id          Int           @id @default(autoincrement())
+  name        String
+  history     String
+  explanation String
+  powerSystem PowerSystem  @relation(fields: [powerSystemId], references: [id])
+  powerSystemId Int
+  moves    PowerMove[]
+}
+
+model PowerMove {
+  id          Int           @id @default(autoincrement())
+  powerType   PowerType     @relation(fields: [powerTypeId], references: [id])
+  powerTypeId Int
+  name        String
+  history     String
+  limitations String
+  sideEffects String
+  createdById Int
+  users       Character[]
+  explanation String
+  images      PowerMoveImage[]
+}
+
+model PowerMoveImage {
+  id          Int           @id @default(autoincrement())
+  powerMove   PowerMove     @relation(fields: [powerMoveId], references: [id])
+  powerMoveId Int
+  image       String
+}
+
+model Conflict {
+  id          Int           @id @default(autoincrement())
+  era         Era           @relation(fields: [eraId], references: [id])     
+  eraId       Int
+  history     String
+  attackGroup Group         @relation("AttackGroup", fields: [attackgroupid], references: [id])
+  attackgroupid Int
+  attackMotivation  String
+  defensiveGroup  Group     @relation("DefenseGroup", fields: [defensiveGroupId], references: [id])
+  defensiveGroupId  Int
+}
+
+model ArtifactsAndWeapons {
+  id          Int           @id @default(autoincrement())
+  name        String
+  speciality  String
+  ownedByGroup       Group               @relation(fields: [ownedByGroupId], references: [id])
+  ownedByGroupId     Int
+  ownedByCharacter   CharacterProgression @relation(fields: [ownedByCharacterId], references: [id])
+  ownedByFamilyId    Int
+  ownedByFamily      Family               @relation(fields: [ownedByFamilyId], references: [id])
+  ownedByCharacterId Int
+}
+
+model Event {
+  id          Int       @id @default(autoincrement())
+  name        String
+  description String
+  era         Era       @relation(fields: [eraId], references: [id])
+  eraId       Int
+}
