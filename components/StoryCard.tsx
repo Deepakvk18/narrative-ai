@@ -2,23 +2,33 @@ import React, { useContext, useState } from 'react';
 import { MyContext } from './FormContext';
 import DialogueBox from './DialogPopUp';
 
-const StoryCard = ({ s, index, onSubmit, setStory }) => {
+const StoryCard = ({
+  s,
+  index,
+  onSubmit,
+  setStory,
+}: {
+  s: string;
+  index: number;
+  onSubmit: Function;
+  setStory: Function;
+}) => {
   const [nextChpt, setNextChpt] = useState(false);
   const [edit, setEdit] = useState(false);
   const [customPrompt, setCustomPrompt] = useState('');
 
   const { formState, setFormState } = useContext(MyContext);
 
-  const onNextChapter = (e) => {
+  const onNextChapter = (e: Event) => {
     e.preventDefault();
-    setFormState((prev) => ({ ...prev, customPrompt }));
+    setFormState((prev: any) => ({ ...prev, customPrompt }));
     onSubmit(formState);
   };
 
-  const onEdit = (e) => {
+  const onEdit = (e: Event) => {
     e.preventDefault();
-    setStory((prev) => prev.slice(0, index));
-    setFormState((prev) => {
+    setStory((prev: any) => prev.slice(0, index));
+    setFormState((prev: any) => {
       return { ...prev, pageNo: index - 1 };
     });
     onSubmit(formState);
@@ -38,7 +48,7 @@ const StoryCard = ({ s, index, onSubmit, setStory }) => {
       {formState.pageNo === index + 1 && (
         <div className="flex w-full">
           <button
-            onClick={onNextChapter}
+            onClick={onNextChapter as any}
             disabled={formState.pageNo >= index + 1}
             type="submit"
             className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition-colors duration-300 right-5 w-80"

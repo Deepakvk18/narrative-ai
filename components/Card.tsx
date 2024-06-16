@@ -15,9 +15,17 @@ const cardVariants = {
   },
 };
 
-const hue = (h) => `hsl(${h}, 100%, 50%)`;
+const hue = (h: number) => `hsl(${h}, 100%, 50%)`;
 
-export default function Card({ emoji, hueA, hueB }) {
+export default function Card({
+  emoji,
+  hueA,
+  hueB,
+}: {
+  emoji: string;
+  hueA: number;
+  hueB: number;
+}) {
   const background = `linear-gradient(306deg, ${hue(hueA)}, ${hue(hueB)})`;
 
   return (

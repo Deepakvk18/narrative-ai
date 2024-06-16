@@ -1,6 +1,18 @@
 import React from 'react';
 
-const DialogueBox = ({ title, value, onChange, onCancel, onConfirm }) => {
+const DialogueBox = ({
+  title,
+  value,
+  onChange,
+  onCancel,
+  onConfirm,
+}: {
+  title: string;
+  value: string;
+  onChange: any;
+  onCancel: any;
+  onConfirm: any;
+}) => {
   return (
     <div className="fixed z-10 inset-0 w-screen h-screen flex items-center justify-center bg-gray-800 bg-opacity-75">
       <div className="w-96 bg-white rounded-lg shadow-lg p-8">
@@ -8,7 +20,6 @@ const DialogueBox = ({ title, value, onChange, onCancel, onConfirm }) => {
         <label className="block mb-4">
           Custom Prompt:
           <textarea
-            type="text"
             className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
             value={value}
             onChange={(e) => onChange(e.target.value)}

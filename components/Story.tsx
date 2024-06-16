@@ -3,7 +3,15 @@ import React from 'react';
 import { motion, useScroll } from 'framer-motion';
 import StoryCard from './StoryCard';
 
-const Story = ({ story, onSubmit, setStory }) => {
+const Story = ({
+  story,
+  onSubmit,
+  setStory,
+}: {
+  story: any;
+  onSubmit: Function;
+  setStory: Function;
+}) => {
   const { scrollYProgress } = useScroll();
 
   return (
@@ -18,13 +26,12 @@ const Story = ({ story, onSubmit, setStory }) => {
         style={{ scaleX: scrollYProgress }}
       />
       <div className="flex flex-col no-scrollbar gap-4">
-        {story?.map((s, index) => (
+        {story?.map((s: any, index: number) => (
           <StoryCard
             key={index}
             s={s}
             index={index}
             onSubmit={onSubmit}
-            story={story}
             setStory={setStory}
           />
         ))}

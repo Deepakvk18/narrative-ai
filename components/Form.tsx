@@ -76,7 +76,13 @@ const creatures = [
   'Hydra',
 ];
 
-const MyForm = ({ onSubmit, disabled }) => {
+const MyForm = ({
+  onSubmit,
+  disabled,
+}: {
+  onSubmit: any;
+  disabled: boolean;
+}) => {
   const {
     register,
     handleSubmit,
@@ -96,7 +102,9 @@ const MyForm = ({ onSubmit, disabled }) => {
           disabled={disabled}
         />
         {errors.name && (
-          <span className="text-red-500">{errors.name.message}</span>
+          <span className="text-red-500">
+            {errors.name.message?.toString()}
+          </span>
         )}
       </label>
       <label className="block mb-4">
@@ -113,7 +121,9 @@ const MyForm = ({ onSubmit, disabled }) => {
           ))}
         </select>
         {errors.setting && (
-          <span className="text-red-500">{errors.setting.message}</span>
+          <span className="text-red-500">
+            {errors.setting.message?.toString()}
+          </span>
         )}
       </label>
       <label className="block mb-4">
@@ -130,7 +140,9 @@ const MyForm = ({ onSubmit, disabled }) => {
           ))}
         </select>
         {errors.creature && (
-          <span className="text-red-500">{errors.creature.message}</span>
+          <span className="text-red-500">
+            {errors.creature.message?.toString()}
+          </span>
         )}
       </label>
       <label className="block mb-4">
@@ -147,7 +159,9 @@ const MyForm = ({ onSubmit, disabled }) => {
           ))}
         </select>
         {errors.element && (
-          <span className="text-red-500">{errors.element.message}</span>
+          <span className="text-red-500">
+            {errors.element.message?.toString()}
+          </span>
         )}
       </label>
       <label className="block mb-4">
@@ -158,7 +172,7 @@ const MyForm = ({ onSubmit, disabled }) => {
           className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 disabled:opacity-30"
         />
         {errors.pages && (
-          <span className="text-red-500">{errors.pages.prompt}</span>
+          <span className="text-red-500">{errors.root?.message}</span>
         )}
       </label>
       <label className="block mb-4">
@@ -170,7 +184,9 @@ const MyForm = ({ onSubmit, disabled }) => {
           className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 disabled:opacity-30"
         />
         {errors.pages && (
-          <span className="text-red-500">{errors.pages.message}</span>
+          <span className="text-red-500">
+            {errors.pages.message?.toString()}
+          </span>
         )}
       </label>
       <button

@@ -4,18 +4,19 @@ import React, { useContext, useState } from 'react';
 import Head from 'next/head';
 import { motion } from 'framer-motion';
 import axios from 'axios';
-import { Bounce, ToastContainer, toast } from 'react-toastify';
 import { MyContext } from '@/components/FormContext';
+import { NotificationContext } from '@/components/Notification';
 import Story from '../components/Story';
 import Form from '../components/Form';
 
 const Page = () => {
-  const [story, setStory] = useState([]);
+  const [story, setStory] = useState<any[]>([]);
   const [currentPage, setCurrentPage] = useState(0);
 
   const { setFormState } = useContext(MyContext);
+  const { setMessages } = useContext(NotificationContext);
 
-  const generateStory = async (data) => {
+  const generateStory = async (data: any) => {
     const storySoFar = data;
     storySoFar.history = story.join('.\n');
     storySoFar.pageNo = currentPage;
@@ -24,25 +25,13 @@ const Page = () => {
       setStory((prev) => [...prev, response.data]);
       setFormState(data);
       setCurrentPage(data.pageNo + 1);
-    } catch (error) {
-      toast(`⚠️ ${error?.message}`, {
-        position: 'top-right',
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: 'light',
-        transition: Bounce,
-        type: 'error',
-      });
+    } catch (error: any) {
+      setMessages({ message: error?.message, type: 'error' });
     }
   };
 
   return (
     <div className="flex max-h-screen w-screen pb-10 no-scrollbar">
-      <ToastContainer />
       <Head>
         <meta name="description" content="Generate personalized stories" />
         <link rel="icon" href="/favicon.ico" />
@@ -56,7 +45,11 @@ const Page = () => {
       >
         <Form onSubmit={generateStory} disabled={story.length > 0} />
         <button
-          onClick={() => setStory([]) && setFormState({}) && setCurrentPage(0)}
+          onClick={() => {
+            setStory([]);
+            setFormState({});
+            setCurrentPage(0);
+          }}
           className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition-colors m-2 duration-300 "
         >
           Create New Story
