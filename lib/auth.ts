@@ -29,7 +29,7 @@ interface IToken extends JWT {
 }
 
 export const authOptions = {
-    adapter: PrismaAdapter(prisma),
+  adapter: PrismaAdapter(prisma),
   providers: [
     CredentialsProvider({
       name: 'Credentials',
