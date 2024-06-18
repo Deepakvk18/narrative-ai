@@ -169,24 +169,68 @@ enum RELATIONSHIPS {
   FELLOW_TRAVELER
 }
 
+model VerificationRequest {
+  id         String   @id @default(cuid())
+  identifier String
+  token      String   @unique
+  expires    DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@unique([identifier, token])
+}
+
+model Account {
+  id                 String    @id @default(cuid())
+  userId             String
+  providerType       String
+  providerId         String
+  providerAccountId  String
+  refreshToken       String?
+  accessToken        String?
+  accessTokenExpires DateTime?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+  user               User      @relation(fields: [userId], references: [id])
+
+  @@unique([providerId, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  userId       String
+  expires      DateTime
+  sessionToken String   @unique
+  accessToken  String   @unique
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  user         User     @relation(fields: [userId], references: [id])
+}
+
 model User {
-  id           Int            @id @default(autoincrement())
-  name         String
+  id           String            @id @default(cuid())
+  name         String?
   email        String         @unique
   signupType   String
+  image        String?
+  password     String
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
   projects     Project[]
   projectRights ProjectRight[]
+  accounts      Account[]
+  sessions      Session[]
 }
 
 model RolePermission {
-  id          Int    @id @default(autoincrement())
+  id          String    @id @default(cuid())
   role        Role @relation(fields: [roleId], references: [id])
-  roleId      Int
+  roleId      String
   permissions String
 }
 
 model Role {
-  id   Int    @id @default(autoincrement())
+  id   String    @id @default(cuid())
   role String
   permissionId Int
   permissions RolePermission[]
@@ -194,25 +238,25 @@ model Role {
 }
 
 model ProjectRight {
-  id         Int     @id @default(autoincrement())
+  id         String     @id @default(cuid())
   project    Project @relation(fields: [projectId], references: [id])
-  projectId  Int
+  projectId  String
   user       User    @relation(fields: [userId], references: [id])
-  userId     Int
+  userId     String
   role       Role    @relation(fields: [roleId], references: [id])
-  roleId     Int
+  roleId     String
 
   @@index([projectId])
   @@index([userId])
 }
 
 model Project {
-  id           Int            @id @default(autoincrement())
+  id           String            @id @default(cuid())
   name         String
   description  String
   summary      String
   createdBy    User           @relation(fields: [createdById], references: [id])
-  createdById  Int
+  createdById  String
   characters   Character[]
   eras         Era[]
   groups       Group[]
@@ -224,53 +268,62 @@ model Project {
 }
 
 model Arc {
-  id                Int                     @id @default(autoincrement())
+  id                String                     @id @default(cuid())
   name              String
   backstory         String
   summary           String
   places            Place[]
-  project           Era                     @relation(fields: [projectId], references: [id])
-  projectId         Int
+  era               Era                     @relation(fields: [eraId], references: [id])
+  eraId             String
   timeline          String
   chapters          Chapter[] 
 }
 
 model Character {
-  id                Int                     @id @default(autoincrement())
+  id                String                     @id @default(cuid())
   project           Project                 @relation(fields: [projectId], references: [id])
-  projectId         Int
+  projectId         String
   name              String
   backstory         String
   gender            GENDER
-  isHuman           Boolean
+  isHuman           Boolean                 @default(true)
   characterTimeline CharacterProgression[]
   owns              Place[]
   family            Family[]
   powerMoves        PowerMove[]
-  era               Era                     @relation(fields: [earId], references: [id])
-  earId             Int
+  nickNames         NickNames[]
+  era               Era                     @relation(fields: [eraId], references: [id])
+  eraId             String
 
   @@index([projectId])
 }
 
+model NickNames {
+  id                String                     @id @default(cuid())
+  character         Character               @relation(fields: [characterId], references: [id])
+  characterId       String
+  nickname          String
+  reason            String
+}
+
 model Occupation {
-  id                Int                     @id @default(autoincrement())
+  id                String                     @id @default(cuid())
   project           Project                 @relation(fields: [projectId], references: [id])
-  projectId         Int
+  projectId         String
   name              String
   description       String
   members           CharacterProgression[]
 }
 
 model CharacterProgression {
-  id                Int                     @id @default(autoincrement())
-  age               Int
+  id                String                     @id @default(cuid())
+  age               String
   occupation        Occupation              @relation(fields: [occupationId], references: [id])
-  occupationId      Int
+  occupationId      String
   character         Character               @relation(fields: [characterId], references: [id])
-  characterId       Int
+  characterId       String
   characterType     CharacterType           @relation(fields: [characterTypeId], references: [id])
-  characterTypeId   Int
+  characterTypeId   String
   imageCharacters   ImageExcerpt[]
   excerptCharacters ExcerptCharacter[]
   clothes           Clothes[]
@@ -285,7 +338,7 @@ model CharacterProgression {
 }
 
 model Family {
-  id         Int         @id @default(autoincrement())
+  id         String         @id @default(cuid())
   name       String
   history    String
   ownsPlace  Place[]
@@ -294,17 +347,17 @@ model Family {
 }
 
 model CharacterType {
-  id         Int         @id @default(autoincrement())
+  id         String         @id @default(cuid())
   type       String
   characters CharacterProgression[]
 }
 
 model CharacterRelationship {
-  id                 Int        @id @default(autoincrement())
+  id                 String        @id @default(cuid())
   character          CharacterProgression  @relation("CharacterRelationships", fields: [characterProgressionId], references: [id])
-  characterProgressionId        Int
+  characterProgressionId        String
   relatedCharacter   CharacterProgression  @relation("RelatedCharacters", fields: [relatedCharacterProgressionId], references: [id])
-  relatedCharacterProgressionId Int
+  relatedCharacterProgressionId String
   relationship       RELATIONSHIPS
 
   @@index([characterProgressionId])
@@ -312,12 +365,13 @@ model CharacterRelationship {
 }
 
 model Chapter {
-  id              Int              @id @default(autoincrement())
+  id              String              @id @default(cuid())
   arc             Arc              @relation(fields: [arcId], references: [id])
-  arcId           Int
+  arcId           String
   placeId         Int
   name            String
   number          Int
+  createdAt       DateTime         @default(now())
   images          Panel[]
   chapterExcerpts ChapterExcerpt[]
 
@@ -325,13 +379,13 @@ model Chapter {
 }
 
 model Group {
-  id        Int     @id @default(autoincrement())
+  id        String     @id @default(cuid())
   name      String
-  captain   Int
+  leader    Int
   motto     String
   isVillain Boolean @default(false)
   project   Project @relation(fields: [projectId], references: [id])
-  projectId Int
+  projectId String
   ownsPlace      Place[]
   ownsArtifacts ArtifactsAndWeapons[]
   members   CharacterProgression[]
@@ -342,24 +396,24 @@ model Group {
 }
 
 model Panel {
-  id               Int              @id @default(autoincrement())
+  id               String              @id @default(cuid())
   chapter          Chapter          @relation(fields: [chapterId], references: [id])
-  chapterId        Int
+  chapterId        String
   imageIndex       Int
   imageUrl         String
   subPlace         SubPlace         @relation(fields: [placeId], references: [id])
-  placeId          Int
+  placeId          String
   imageCharacters  ImageExcerpt[]
 
   @@index([chapterId])
 }
 
 model ImageExcerpt {
-  id          Int       @id @default(autoincrement())
+  id          String       @id @default(cuid())
   image       Panel     @relation(fields: [imageId], references: [id])
-  imageId     Int
+  imageId     String
   character   CharacterProgression @relation(fields: [characterProgressionId], references: [id])
-  characterProgressionId Int
+  characterProgressionId String
   imageRole   String
 
   @@index([imageId])
@@ -367,9 +421,9 @@ model ImageExcerpt {
 }
 
 model ChapterExcerpt {
-  id            Int                @id @default(autoincrement())
+  id            String                @id @default(cuid())
   chapter       Chapter            @relation(fields: [chapterId], references: [id])
-  chapterId     Int
+  chapterId     String
   excerptIndex  Int
   excerpt       String
   excerptCharacters ExcerptCharacter[]
@@ -378,11 +432,11 @@ model ChapterExcerpt {
 }
 
 model ExcerptCharacter {
-  id          Int            @id @default(autoincrement())
+  id          String            @id @default(cuid())
   excerpt     ChapterExcerpt @relation(fields: [excerptId], references: [id])
-  excerptId   Int
+  excerptId   String
   character   CharacterProgression      @relation(fields: [characterProgressionId], references: [id])
-  characterProgressionId Int
+  characterProgressionId String
   role        String
 
   @@index([excerptId])
@@ -390,24 +444,24 @@ model ExcerptCharacter {
 }
 
 model Place {
-  id                 Int           @id @default(autoincrement())
+  id                 String           @id @default(cuid())
   project            Project       @relation(fields: [projectId], references: [id])
-  projectId          Int
+  projectId          String
   history            String
   ownedByCharacter   Character     @relation(fields: [ownedByCharacterId], references: [id])
-  ownedByCharacterId Int
+  ownedByCharacterId String
   ownedByFamily      Family   @relation(fields: [ownedByFamilyId], references: [id])
-  ownedByFamilyId    Int
+  ownedByFamilyId    String
   ownedByGroup       Group        @relation(fields: [ownedByGroupId], references: [id])
-  ownedByGroupId     Int
+  ownedByGroupId     String
   subPlaces          SubPlace[]
   arcs               Arc[]
 }
 
 model SubPlace {
-  id          Int           @id @default(autoincrement())
+  id          String           @id @default(cuid())
   place       Place         @relation(fields: [placeId], references: [id])
-  placeId     Int
+  placeId     String
   name        String
   history     String
   panels      Panel[]
@@ -415,9 +469,9 @@ model SubPlace {
 }
 
 model Era {
-  id          Int           @id @default(autoincrement())
+  id          String           @id @default(cuid())
   project     Project       @relation(fields: [projectId], references: [id])
-  projectId   Int
+  projectId   String
   timeline    String
   description String
   significantEvents String
@@ -428,9 +482,9 @@ model Era {
 }
 
 model SubPlaceProgression {
-  id          Int           @id @default(autoincrement())
+  id          String           @id @default(cuid())
   place       SubPlace      @relation(fields: [subPlaceId], references: [id])
-  subPlaceId  Int
+  subPlaceId  String
   era         String
   name        String
   history     String
@@ -438,28 +492,28 @@ model SubPlaceProgression {
 }
 
 model CharacterImage {
-  id          Int           @id @default(autoincrement())
+  id          String           @id @default(cuid())
   character   CharacterProgression     @relation(fields: [characterProgressionId], references: [id])
-  characterProgressionId Int
+  characterProgressionId String
   imageUrl    String
 }
 
 model PlaceImage {
-  id          Int           @id @default(autoincrement())
+  id          String           @id @default(cuid())
   subPlace    SubPlaceProgression         @relation(fields: [subPlaceId], references: [id])
-  subPlaceId     Int
+  subPlaceId     String
   imageUrl    String
 }
 
 model Clothes {
-  id          Int           @id @default(autoincrement())
+  id          String           @id @default(cuid())
   name        String
   characters  CharacterProgression[]
   image       String
 }
 
 model PowerSystem {
-  id          Int           @id @default(autoincrement())
+  id          String           @id @default(cuid())
   name        String
   history     String
   explanation String
@@ -467,19 +521,19 @@ model PowerSystem {
 }
 
 model PowerType {
-  id          Int           @id @default(autoincrement())
+  id          String           @id @default(cuid())
   name        String
   history     String
   explanation String
   powerSystem PowerSystem  @relation(fields: [powerSystemId], references: [id])
-  powerSystemId Int
+  powerSystemId String
   moves    PowerMove[]
 }
 
 model PowerMove {
-  id          Int           @id @default(autoincrement())
+  id          String           @id @default(cuid())
   powerType   PowerType     @relation(fields: [powerTypeId], references: [id])
-  powerTypeId Int
+  powerTypeId String
   name        String
   history     String
   limitations String
@@ -491,40 +545,40 @@ model PowerMove {
 }
 
 model PowerMoveImage {
-  id          Int           @id @default(autoincrement())
+  id          String           @id @default(cuid())
   powerMove   PowerMove     @relation(fields: [powerMoveId], references: [id])
-  powerMoveId Int
+  powerMoveId String
   image       String
 }
 
 model Conflict {
-  id          Int           @id @default(autoincrement())
+  id          String           @id @default(cuid())
   era         Era           @relation(fields: [eraId], references: [id])     
-  eraId       Int
+  eraId       String
   history     String
   attackGroup Group         @relation("AttackGroup", fields: [attackgroupid], references: [id])
-  attackgroupid Int
+  attackgroupid String
   attackMotivation  String
   defensiveGroup  Group     @relation("DefenseGroup", fields: [defensiveGroupId], references: [id])
-  defensiveGroupId  Int
+  defensiveGroupId  String
 }
 
 model ArtifactsAndWeapons {
-  id          Int           @id @default(autoincrement())
+  id          String           @id @default(cuid())
   name        String
   speciality  String
   ownedByGroup       Group               @relation(fields: [ownedByGroupId], references: [id])
-  ownedByGroupId     Int
+  ownedByGroupId     String
   ownedByCharacter   CharacterProgression @relation(fields: [ownedByCharacterId], references: [id])
-  ownedByFamilyId    Int
+  ownedByFamilyId    String
   ownedByFamily      Family               @relation(fields: [ownedByFamilyId], references: [id])
-  ownedByCharacterId Int
+  ownedByCharacterId String
 }
 
 model Event {
-  id          Int       @id @default(autoincrement())
+  id          String       @id @default(cuid())
   name        String
   description String
   era         Era       @relation(fields: [eraId], references: [id])
-  eraId       Int
+  eraId       String
 }
