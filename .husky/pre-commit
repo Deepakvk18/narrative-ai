@@ -1,2 +1,2 @@
-yarn run lint --fix
-yarn run format
+bun run lint --fix
+bun run format

@@ -4,14 +4,6 @@ import prisma from '@/db';
 import bcrypt from 'bcrypt';
 import { NextAuthOptions, Session } from 'next-auth';
 import { PrismaAdapter } from '@next-auth/prisma-adapter';
-import { JWT } from 'next-auth/jwt';
-
-interface IUser {
-  id: string;
-  name: string | null;
-  email: string;
-  token: string;
-}
 
 export interface ISession extends Session {
   user: {
@@ -21,11 +13,6 @@ export interface ISession extends Session {
     email: string;
     name: string;
   };
-}
-
-interface IToken extends JWT {
-  uid: string;
-  jwtToken: string;
 }
 
 export const authOptions = {
@@ -87,17 +74,26 @@ export const authOptions = {
   ],
   secret: process.env.NEXTAUTH_SECRET || 'secr3t',
   callbacks: {
-    jwt: async ({ token: jwtToken, user: currentUser }): Promise<JWT> => {
-      const newToken: IToken = jwtToken as IToken;
-
-      if (currentUser) {
-        newToken.uid = currentUser.id;
-        newToken.jwtToken = (currentUser as IUser).token;
+    jwt: async ({ token, user }) => {
+      if (user) {
+        token.user = user;
       }
-      return newToken;
+      return Promise.resolve(token);
+    },
+    session: async ({ session, token }) => {
+      session.user = token.user;
+      return Promise.resolve(session);
     },
   },
   pages: {
     signIn: '/signin',
   },
+  session: {
+    strategy: 'jwt',
+
+    // Seconds - How long until an idle session expires and is no longer valid.
+    maxAge: 30 * 24 * 60 * 60, // 30 days
+    updateAge: 24 * 60 * 60, // 24 hours
+  },
+  debug: true,
 } satisfies NextAuthOptions;
