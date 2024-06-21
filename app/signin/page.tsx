@@ -23,7 +23,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { NotificationContext } from '@/components/Notification';
+import { NotificationContext } from '@/components/features/Notification';
 
 const signInSchema = z.object({
   email: z.string().email('Invalid email address'),
@@ -54,7 +54,7 @@ export default function SignIn() {
     if (result?.error) {
       notify({ message: 'Wrong Password', type: 'error' });
     } else {
-      router.push('/'); // Redirect to home page or dashboard after successful login
+      router.push('/profile');
     }
   };
 

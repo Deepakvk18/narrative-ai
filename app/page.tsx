@@ -5,7 +5,7 @@ import Head from 'next/head';
 import { motion } from 'framer-motion';
 import axios from 'axios';
 import { MyContext } from '@/components/FormContext';
-import { NotificationContext } from '@/components/Notification';
+import { NotificationContext } from '@/components/features/Notification';
 import Story from '../components/Story';
 import Form from '../components/Form';
 
@@ -14,7 +14,7 @@ const Page = () => {
   const [currentPage, setCurrentPage] = useState(0);
 
   const { setFormState } = useContext(MyContext);
-  const { setMessages } = useContext(NotificationContext);
+  const { notify } = useContext(NotificationContext);
 
   const generateStory = async (data: any) => {
     const storySoFar = data;
@@ -26,7 +26,7 @@ const Page = () => {
       setFormState(data);
       setCurrentPage(data.pageNo + 1);
     } catch (error: any) {
-      setMessages({ message: error?.message, type: 'error' });
+      notify({ message: error?.message, type: 'error' });
     }
   };
 

@@ -2,7 +2,7 @@
 
 import React, { ReactNode, createContext } from 'react';
 import { toast } from 'sonner';
-import { Toaster } from './ui/sonner';
+import { Toaster } from '../ui/sonner';
 
 interface INotificationContext {
   notify: Function;
@@ -30,13 +30,7 @@ export const Notification = ({ children }: { children: ReactNode }) => {
 
   return (
     <NotificationContext.Provider value={{ notify }}>
-      <Toaster
-        invert
-        closeButton
-        duration={3000}
-        richColors
-        position="top-right"
-      />
+      <Toaster closeButton duration={3000} richColors position="top-right" />
       {children}
     </NotificationContext.Provider>
   );
