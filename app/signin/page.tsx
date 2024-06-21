@@ -34,7 +34,7 @@ type SignInSchema = z.infer<typeof signInSchema>;
 
 export default function SignIn() {
   const router = useRouter();
-  const { setMessages } = useContext(NotificationContext);
+  const { notify } = useContext(NotificationContext);
 
   const form = useForm<SignInSchema>({
     resolver: zodResolver(signInSchema),
@@ -52,7 +52,7 @@ export default function SignIn() {
     });
 
     if (result?.error) {
-      setMessages({ message: 'Wrong Password', type: 'error' });
+      notify({ message: 'Wrong Password', type: 'error' });
     } else {
       router.push('/'); // Redirect to home page or dashboard after successful login
     }
