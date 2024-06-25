@@ -74,15 +74,23 @@ export const authOptions = {
   ],
   secret: process.env.NEXTAUTH_SECRET || 'secr3t',
   callbacks: {
-    jwt: async ({ token, user }) => {
+    jwt: ({ token, user }) => {
       if (user) {
-        token.user = user;
+        if (user) {
+          return { ...token, id: user.id }; // Save id to token as docs says: https://next-auth.js.org/configuration/callbacks
+        }
       }
-      return Promise.resolve(token);
+      return token;
     },
-    session: async ({ session, token }) => {
-      session.user = token.user;
-      return Promise.resolve(session);
+    session: ({ session, token }) => {
+      return {
+        ...session,
+        user: {
+          ...session.user,
+          // id: user.id, // This is copied from official docs which find user is undefined
+          id: token.id, // Get id from token instead
+        },
+      };
     },
   },
   pages: {
@@ -90,7 +98,6 @@ export const authOptions = {
   },
   session: {
     strategy: 'jwt',
-
     // Seconds - How long until an idle session expires and is no longer valid.
     maxAge: 30 * 24 * 60 * 60, // 30 days
     updateAge: 24 * 60 * 60, // 24 hours

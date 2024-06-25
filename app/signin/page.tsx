@@ -5,7 +5,6 @@ import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -24,13 +23,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { NotificationContext } from '@/components/features/Notification';
-
-const signInSchema = z.object({
-  email: z.string().email('Invalid email address'),
-  password: z.string().min(6, 'Password must be at least 6 characters'),
-});
-
-type SignInSchema = z.infer<typeof signInSchema>;
+import { SignInSchema, signInSchema } from '../types/signin.types';
 
 export default function SignIn() {
   const router = useRouter();
@@ -59,7 +52,7 @@ export default function SignIn() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+    <div className="flex items-center justify-center min-h-screen">
       <Card className="w-[350px]">
         <CardHeader>
           <CardTitle>Sign In</CardTitle>
