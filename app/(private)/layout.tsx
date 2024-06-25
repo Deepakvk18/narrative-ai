@@ -14,7 +14,7 @@ export default function PrivateLayout({ children }: { children: ReactNode }) {
       notify({ message: 'Login to access this page', type: 'error' });
       redirect('/signin');
     }
-  }, [session]);
+  }, [session, notify]);
 
   return <>{children}</>;
 }

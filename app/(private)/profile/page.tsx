@@ -50,6 +50,7 @@ async function uploadImage(url: string, file: File) {
   //     'Content-Type': file.type,
   //   },
   // });
+  return { url, file };
 }
 
 const ProfilePage = () => {
@@ -81,7 +82,7 @@ const ProfilePage = () => {
         email: false,
       });
     }
-  }, [session]);
+  }, [session, form, user?.name]);
 
   const { notify } = useContext(NotificationContext);
 
