@@ -47,6 +47,7 @@ export const authOptions = {
             id: userDb.id.toString(),
             name: userDb.name,
             email: credentials.username,
+            image: userDb.image,
           };
         }
 
@@ -65,6 +66,7 @@ export const authOptions = {
             id: data.id.toString(),
             name: data.name,
             email: data.email,
+            image: data?.image,
           };
         } catch (e) {
           return null;

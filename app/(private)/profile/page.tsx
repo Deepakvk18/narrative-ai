@@ -228,13 +228,12 @@ const ProfilePage = () => {
                             <Coins className="h-6 w-6 mr-2" />
                             <span className="text-xl font-bold">{tokens}</span>
                           </div>
-                          <Button
+                          <p
                             onClick={handleBuyTokens}
-                            variant="outline"
-                            className="w-32"
+                            className="w-32 cursor-pointer"
                           >
                             Buy Tokens
-                          </Button>
+                          </p>
                         </div>
                       </div>
                     </FormControl>

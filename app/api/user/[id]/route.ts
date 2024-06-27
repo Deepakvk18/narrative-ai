@@ -20,3 +20,20 @@ export const POST = async (
   });
   return NextResponse.json(update);
 };
+
+export const GET = async (
+  req: NextRequest,
+  { params }: { params: { id: string } },
+) => {
+  const { id } = params;
+  const user = await prisma.user.findFirst({
+    where: {
+      id,
+    },
+    include: {
+      projectRights: true,
+      projects: true,
+    },
+  });
+  return NextResponse.json(user);
+};
